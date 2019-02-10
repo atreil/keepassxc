@@ -101,6 +101,7 @@ public:
     Group* findGroupByPath(QString groupPath, QString basePath = QString("/"));
     QStringList locate(QString locateTerm, QString currentPath = QString("/"));
     Entry* addEntryWithPath(QString entryPath);
+    Group* addGroupWithPath(QString groupPath, bool createMissing);
     void setUuid(const Uuid& uuid);
     void setName(const QString& name);
     void setNotes(const QString& notes);

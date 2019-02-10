@@ -80,6 +80,12 @@ int Add::execute(const QStringList& arguments)
                               QObject::tr("length"));
     parser.addOption(length);
 
+    QCommandLineOption note(QStringList() << "n"
+                                          << "note",
+                              QObject::tr("Add a note to the entry."),
+                              QObject::tr("note"));
+    parser.addOption(note);
+
     parser.addPositionalArgument("entry", QObject::tr("Path of the entry to add."));
     parser.process(arguments);
 
@@ -137,6 +143,10 @@ int Add::execute(const QStringList& arguments)
         passwordGenerator.setFlags(PasswordGenerator::DefaultFlags);
         QString password = passwordGenerator.generatePassword();
         entry->setPassword(password);
+    }
+
+    if (!parser.value("note").isEmpty()) {
+        entry->setNotes(parser.value("note"));
     }
 
     QString errorMessage = db->saveToFile(databasePath);

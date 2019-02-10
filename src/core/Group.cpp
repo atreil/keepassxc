@@ -1061,3 +1061,44 @@ Entry* Group::addEntryWithPath(QString entryPath)
     return entry;
 
 }
+
+Group* Group::addGroupWithPath(QString groupPath, bool createMissing) {
+    Q_ASSERT(!groupPath.isNull());
+    if (this->findGroupByPath(groupPath)) {
+        return nullptr;
+    }
+
+    QStringList groups = groupPath.split("/");
+    QString newGroup = groups.takeLast();
+    QString parentGroup = groups.join("/");
+    if (parentGroup.isNull()) {
+        parentGroup = QString("");
+    }
+
+    Q_ASSERT(!parentGroup.isNull());
+    Group* group = this->findGroupByPath(parentGroup);
+    if (!group) {
+        if (!createMissing) {
+            return nullptr;
+        }
+
+        Group* prev = this;
+        Group* curr = nullptr;
+        for (QString pathPart : parentGroup) {
+            curr = prev->findGroupByPath(pathPart)
+            if (!curr) {
+                curr = new Group();
+                curr->setUuid(Uuid::random());
+                curr->setParent(prev);
+            }
+            prev = curr;
+        }
+
+        return curr;
+    } else {
+        Group* newGroup = new Group();
+        newGroup->setUuid(Uuid:random());
+        newGroup.setParent(this);
+        return newGroup;
+    }
+}
